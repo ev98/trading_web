@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="head(title)">  <!--title为传参-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:replace="${title}">校内交易网</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <link rel="stylesheet" th:href="@{/css/layui.css}">
+    <link rel="stylesheet" th:href="@{/css/me.css}">
+</head>
+<body>
+
+<!--导航-->
+<nav th:fragment="menu" class="ui attached m-padded-tb m-footer">
+    <div class="m-padded-lr">
+        <div class="ui secondary stackable menu ">
+            <!-- logo -->
+            <a th:href="@{/index}" class="ui teal header item" data-tooltip="返回首页" data-position="bottom left">
+                    <span class="m-font-size-larger">
+                        校内交易网
+                    </span>
+            </a>
+            <!-- 分类 -->
+            <div class="m-item ui pointing dropdown link item m-mobile-hide">
+                <i class="large bars icon"></i><span class="m-font-size">商品分类</span>
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <div th:each="category : ${session.categoryList}">
+                        <a th:href="@{/toCategory/{id}(id=${category.id})}" class="item">
+                            <i class="mobile alternate icon" th:if="${category.id==1}"></i>
+                            <i class="bicycle icon" th:if="${category.id==2}"></i>
+                            <i class="book icon" th:if="${category.id==3}"></i>
+                            <i class="futbol icon" th:if="${category.id==4}"></i>
+                            <i class="user icon" th:if="${category.id==5}"></i>
+                            <i class="shopping bag icon" th:if="${category.id==6}"></i>
+                            <i class="paint brush icon" th:if="${category.id==7}"></i>
+                            <span class="m-font-size" th:text="${category.caName}">数码产品</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- 发布商品 -->
+            <div class="m-item ui pointing dropdown link item m-mobile-hide">
+                <a th:href="@{/toRelease}">
+                    <i class="large plus square outline icon"></i><span class="m-font-size">发布商品</span>
+                </a>
+            </div>
+            <!-- 求购 -->
+            <div class="m-item ui pointing dropdown link item m-mobile-hide">
+                <a th:href="@{/toPurchase}">
+                    <i class="large bookmark outline icon"></i><span class="m-font-size">求购</span>
+                </a>
+            </div>
+            <!-- 搜索 -->
+            <div class="m-item item m-mobile-hide">
+                <form name="search" method="post" th:action="@{/search}" target="_self">
+                    <div class="ui icon large input focus">
+                        <input type="text" name="query" style="width: 400px;" placeholder="Search...."
+                               th:value="${query}">
+                        <i onclick="document.forms['search'].submit()" class="search link icon"></i>
+                    </div>
+                </form>
+            </div>
+            <!-- 个人信息 -->
+            <div class="m-item right m-mobile-hide menu">
+<!--                &lt;!&ndash; 通知 &ndash;&gt;-->
+<!--                <a class="ui item" href="#"><i class="large bell outline icon"></i>-->
+<!--                    <span class="m-font-size">通知</span>-->
+<!--                    &lt;!&ndash; 如果有新消息，则显示小圆点 &ndash;&gt;-->
+<!--                    <span class="layui-badge-dot"></span>-->
+<!--                </a>-->
+                <!-- 登录和个人信息二选一 -->
+                <div class="ui item" th:if="${#lists.isEmpty(session.user)}">
+                    <div>
+                        <span><a th:href="@{/toLogin}" class="m-font-size">登录</a></span>
+                    </div>
+                </div>
+                <div class="ui pointing dropdown link item" th:unless="${#lists.isEmpty(session.user)}">
+                    <div>
+                        <img class="ui bordered avatar image" th:src="${session.user.avatar}"
+                             onerror="this.src='/images/avatar1.jpg'">
+                        <span class="m-font-size" th:text="${session.user.name}">EV</span>
+                    </div>
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                        <a th:href="@{/toUserInfo}" class="item">个人信息</a>
+                        <a th:href="@{/toUserCollect}" class="item">我的收藏</a>
+                        <a th:if="${session.user.role==0}" th:href="@{/admin}" class="item">管理员登录</a>
+                        <a th:href="@{/logout}" class="item">注销</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
+            <i class="sidebar icon"></i>
+        </a>
+    </div>
+</nav>
+
+<!--个人信息侧边栏-->
+<!-- 侧边栏 -->
+<div th:fragment="sidebar(n)" class="three wide column">
+    <div class="ui teal segment m-sidebar-li-head m-sidebar-li-head-username">
+        <img class="ui bordered circular image m-sidebar-li-head-avatar" th:src="${session.user.avatar}"
+             onerror="this.src='/images/avatar1.jpg'">
+        <span class="m-sidebar-username" th:text="${session.user.name}">白色月牙</span>
+    </div>
+    <div class="ui teal segment">
+        <ul>
+            <li class="m-sidebar-li m-sidebar-font"><a th:href="@{/toUserInfo}" class="m-sidebar-a"
+                                                       th:classappend="${n==1}?'m-sidebar-a-color'">个人信息</a></li>
+            <div class="ui fitted divider"></div>
+            <li class="m-sidebar-li m-sidebar-font"><a th:href="@{/toUserAccount}" class="m-sidebar-a"
+                                                       th:classappend="${n==2}?'m-sidebar-a-color'">我的钱包</a></li>
+            <div class="ui fitted divider"></div>
+            <li class="m-sidebar-li m-sidebar-font"><a th:href="@{/toUserCollect}" class="m-sidebar-a"
+                                                       th:classappend="${n==3}?'m-sidebar-a-color'">我的收藏</a></li>
+            <div class="ui fitted divider"></div>
+            <li class="m-sidebar-li m-sidebar-font"><a th:href="@{/toUserPost}" class="m-sidebar-a"
+                                                       th:classappend="${n==4}?'m-sidebar-a-color'">我的求购</a></li>
+            <div class="ui fitted divider"></div>
+            <li class="m-sidebar-li m-sidebar-font"><a th:href="@{/toUserRelease}" class="m-sidebar-a"
+                                                       th:classappend="${n==5}?'m-sidebar-a-color'">我发布的</a></li>
+            <div class="ui fitted divider"></div>
+            <li class="m-sidebar-li m-sidebar-font"><a th:href="@{/toUserSell}" class="m-sidebar-a"
+                                                       th:classappend="${n==6}?'m-sidebar-a-color'">我卖出的</a></li>
+            <div class="ui fitted divider"></div>
+            <li class="m-sidebar-li m-sidebar-font"><a th:href="@{/toUserBought}" class="m-sidebar-a"
+                                                       th:classappend="${n==7}?'m-sidebar-a-color'">我买到的</a></li>
+        </ul>
+    </div>
+</div>
+
+<!--底部-->
+<footer th:fragment="footbar" class="m-padded-tb-big m-footer">
+    <div class="m-padded-lr">
+        <!-- 1 -->
+        <div class="ui five column doubling stackable divided grid">
+            <div class="column">
+                <div class="ui inverted link list">
+                    <div class="m-footer-position">
+                        <i class="large tv icon"></i><span class="m-font-footer">校园交易</span>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="ui inverted link list">
+                    <div class="m-footer-position">
+                        <i class="large star outline icon"></i><span class="m-font-footer">快乐购物</span>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="ui inverted link list">
+                    <div class="m-footer-position">
+                        <i class="large bookmark outline icon"></i><span class="m-font-footer">种类丰富</span>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="ui inverted link list">
+                    <div class="m-footer-position">
+                        <i class="large paper plane outline icon"></i><span class="m-font-footer">方便你我</span>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="ui inverted link list">
+                    <div class="m-footer-position">
+                        <i class="large heart outline icon"></i><span class="m-font-footer">用心服务</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ui inverted section divider"></div>
+        <!-- 2 -->
+        <div class="ui five column doubling stackable divided grid m-padded-tb-large">
+            <div class="column">
+                <div class="ui inverted link list">
+                    <div class="m-footer-position-2">
+                        <div class="m-footer-font-1">帮助中心</div>
+                        <br>
+                        <div class="m-footer-font-2">账户管理</div>
+                        <div class="m-footer-font-2">购物指南</div>
+                        <div class="m-footer-font-2">订单操作</div>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="ui inverted link list">
+                    <div class="m-footer-position-2">
+                        <div class="m-footer-font-1">联系我们</div>
+                        <br>
+                        <div class="m-footer-font-2">Tel：13653951918</div>
+                        <div class="m-footer-font-2">QQ：1301493116</div>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="ui inverted link list">
+                    <div class="m-footer-position-2">
+                        <div class="m-footer-font-1">关注我们</div>
+                        <br>
+                        <div class="m-footer-font-2">新浪微博</div>
+                        <div class="m-footer-font-2">官方微信</div>
+                        <div class="m-footer-font-2">Github/码云</div>
+                    </div>
+                </div>
+            </div>
+            <div class="two column">
+                <div class="ui inverted link list">
+                    <div class="m-footer-position-3">
+                        <div class="m-footer-font-1">关于网站</div>
+                        <br>
+                        <div class="m-footer-font-2 m-text-spaced">校内交易网，为同学们提供一个校园内部闲置物品交易与置换的平台</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ui inverted section divider"></div>
+        <!-- 3 -->
+        <div>
+            <span class="m-font-footer-logo">闲置，非旧货。置换，新生活。</span>
+        </div>
+    </div>
+</footer>
+
+<!--js-->
+<th:block th:fragment="script">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script type="application/javascript" th:src="@{/js/layui.js}"></script>
+    <script th:src="@{/js/modules/jquery.waypoints.min.js}"></script>
+    <script th:src="@{/js/user/general.js}"></script>
+</th:block>
+
+</body>
+</html>

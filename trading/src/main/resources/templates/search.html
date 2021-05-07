@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: head(~{::title})">
+    <title>搜索</title>
+</head>
+
+<body>
+<!-- 导航 -->
+<nav th:replace="fragments :: menu"></nav>
+
+<!-- 中间内容 -->
+<div id="waypoint" class="m-padded-lr m-padded-tb-bottom">
+    <div class="m-padded-tb-mini">
+        <!-- 标题 -->
+        <div class="m-padded-tb-title">
+            <div>
+                <span class="m-font-size-large">搜索(</span><span class="m-font-size-large" th:text="${session.query}"></span><span class="m-font-size-large">)</span>
+                <input type="hidden" name="query" th:value="${session.query}">
+                <div class="ui m-font-sort dropdown">
+                    <span class="text" th:text="${sort}">排序</span>
+                    <i class="sort icon"></i>
+                    <div class="menu">
+                        <div class="scrolling menu">
+                            <a th:href="@{/searchByView}" class="item">
+                                <div>
+                                    热度最高
+                                </div>
+                            </a>
+                            <a th:href="@{/searchByTime}" class="item">
+                                <div>
+                                    最新发布
+                                </div>
+                            </a>
+                            <a th:href="@{/searchByPriceAsc}" class="item">
+                                <div>
+                                    价格升序
+                                </div>
+                            </a>
+                            <a th:href="@{/searchByPriceDesc}" class="item">
+                                <div>
+                                    价格降序
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 商品 -->
+        <div class="ui four column doubling stackable grid m-padded-tb-small">
+            <div class="column m-padded-tb-tiny" th:each="commodity : ${commodityList}">
+                <div class="m-image-shadow">
+                    <a th:href="@{/commodityDetail/{id}(id=${commodity.id})}">
+                        <!-- 商品图片 -->
+                        <img class="m-image-size" th:src="${commodity.firstPicture}"
+                             onerror="this.src='/images/noimage.jpg'">
+                        <!-- 商品详情 -->
+                        <div class="m-font-shop-detail" th:text="${commodity.CName}">商品名称</div>
+                        <div>
+                            <i class="yen sign icon m-font-shop-price"><span
+                                    class="m-font-shop-price-number" th:text="${commodity.price}">2333</span></i>
+                            <span class="m-font-shop-want"><span th:text="${commodity.view}">432</span>人想要</span>
+                        </div>
+                        <div class="m-font-shop-avatar">
+                            <img class="ui bordered avatar image" th:src="${commodity.user.avatar}"
+                                 onerror="this.src='/images/avatar1.jpg'">
+                            <span class="m-font-shop-username" th:text="${commodity.user.name}">小瘦子</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- 分页 -->
+        <div class="m-padded-tb-large">
+            <span>
+                <a th:href="@{'/'+${rank}(pageNum=${pageInfo.hasPreviousPage}?${pageInfo.prePage}:1)}"
+                   class="m-font-left"><i class="angle left icon"></i>上一页</a>
+            </span>
+            <span class="m-font-center">
+                <span th:text="${pageInfo.pageNum}">1</span>/<span th:text="${pageInfo.pages}">3</span>
+            </span>
+            <span>
+                <a th:href="@{'/'+${rank}(pageNum=${pageInfo.hasNextPage}?${pageInfo.nextPage}:${pageInfo.pages})}"
+                   class="m-font-right">下一页<i class="angle right icon"></i></a>
+            </span>
+        </div>
+    </div>
+</div>
+
+<!-- 底部 -->
+<footer th:replace="fragments :: footbar"></footer>
+
+<!--右下角浮动的图标-->
+<div id="toolbar" class="m-padded-tb-large m-fixed m-right-bottom" style="display: none">
+    <div id="toTop-button" class="ui teal icon button"><i class="chevron up icon"></i></div>
+</div>
+
+</body>
+
+<!--导入的script-->
+<th:block th:replace="fragments :: script">
+</th:block>
+
+</html>

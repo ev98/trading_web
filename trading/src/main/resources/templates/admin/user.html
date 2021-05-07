@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="admin/fragments :: head(~{::title})">
+    <title>用户管理</title>
+</head>
+
+<body>
+
+<!--头部导航-->
+<div th:replace="admin/fragments :: menu(3)"></div>
+
+<!--中间内容-->
+<div class="m-container-small m-padded-tb-big">
+    <div class="ui container">
+        <div class="ui secondary segment form">
+            <div id="table-container">
+                <table class="ui compact teal table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>用户名</th>
+                        <th>手机号</th>
+                        <th>邮箱</th>
+                        <th>创建时间</th>
+                        <th>角色</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="user, iterStat : ${userList}">
+                        <td th:text="${iterStat.count}">1</td>
+                        <td th:text="${user.name}">ev</td>
+                        <td th:text="${user.phone}">校园代步</td>
+                        <td th:text="${user.email}">啦啦啦</td>
+                        <td th:text="${#dates.format(user.createTime,'yyyy-MM-dd')}">2020-12-10</td>
+                        <td th:if="${user.role==0}">管理员</td>
+                        <td th:if="${user.role==1}">普通用户</td>
+                        <td>
+                            <a th:href="@{/admin/toUser0/{id}(id=${user.id})}"
+                               class="ui mini green basic button">设为管理员</a>
+                            <a th:href="@{/admin/toUser1/{id}(id=${user.id})}"
+                               class="ui mini blue basic button">设为普通用户</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th colspan="7">
+                            <div class="ui mini pagination menu">
+                                <div class="item"><a
+                                        th:href="@{/admin/toUser(pageNum=${pageInfo.hasPreviousPage}?${pageInfo.prePage}:1)}">上一页</a>
+                                </div>
+                                <div class="item"><a
+                                        th:href="@{/admin/toUser(pageNum=${pageInfo.hasNextPage}?${pageInfo.nextPage}:${pageInfo.pages})}">下一页</a>
+                                </div>
+                            </div>
+                        </th>
+                    </tr>
+                    </tfoot>
+                </table>
+                <div class="ui segment m-inline-block">
+                    <p>当前第<span th:text="${pageInfo.pageNum}">1</span>页，总<span
+                            th:text="${pageInfo.pages}">20</span>页，共<span th:text="${pageInfo.total}">321</span>条记录</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="admin/fragments :: footbar"></footer>
+
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+
+<script>
+    $('.menu.toggle').click(function () {
+        $('.m-item').toggleClass('m-mobile-hide');
+    });
+    $('.ui.dropdown').dropdown({
+        on: 'hover'
+    });
+</script>
+
+</html>

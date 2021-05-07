@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="admin/fragments :: head(~{::title})">
+    <title>求购管理</title>
+</head>
+
+<body>
+
+<!--头部导航-->
+<div th:replace="admin/fragments :: menu(2)"></div>
+
+<!--中间内容-->
+<div class="m-container-small m-padded-tb-big">
+    <div class="ui container">
+        <div class="ui secondary segment form">
+            <form class="inline fields" th:action="@{/admin/searchPost}" method="post">
+                <div class="field">
+                    <input type="text" name="content" placeholder="求购内容">
+                </div>
+                <div class="field">
+                    <button type="submit" class="ui mini teal basic button"><i
+                            class="search icon"></i>搜索
+                    </button>
+                </div>
+            </form>
+            <div id="table-container">
+                <table class="ui compact teal table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>求购内容</th>
+                        <th>发布者</th>
+                        <th>发布时间</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="post, iterStat : ${postList}">
+                        <td th:text="${iterStat.count}">1</td>
+                        <td style="max-width: 160px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+                            <a th:text="${post.content}" th:href="@{/post/{id}(id=${post.id})}"></a>
+                        </td>
+                        <td th:text="${post.user.name}">啦啦啦</td>
+                        <td th:text="${#dates.format(post.updateTime,'yyyy-MM-dd')}">2020-12-10</td>
+                        <td>
+                            <a th:href="@{/admin/deletePost/{id}(id=${post.id})}"
+                               class="ui mini red basic button delete">删除求购</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th colspan="7">
+                            <div class="ui mini pagination menu">
+                                <div class="item"><a
+                                        th:href="@{/admin/toPost(pageNum=${pageInfo.hasPreviousPage}?${pageInfo.prePage}:1)}">上一页</a>
+                                </div>
+                                <div class="item"><a
+                                        th:href="@{/admin/toPost(pageNum=${pageInfo.hasNextPage}?${pageInfo.nextPage}:${pageInfo.pages})}">下一页</a>
+                                </div>
+                            </div>
+                        </th>
+                    </tr>
+                    </tfoot>
+                </table>
+                <div class="ui segment m-inline-block">
+                    <p>当前第<span th:text="${pageInfo.pageNum}">1</span>页，总<span
+                            th:text="${pageInfo.pages}">20</span>页，共<span th:text="${pageInfo.total}">321</span>条记录</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="admin/fragments :: footbar"></footer>
+
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".delete").click(function () {
+            if (confirm("确定删除吗")) {
+                return true;
+            }
+            return false;
+        });
+    });
+</script>
+
+<script>
+    $('.menu.toggle').click(function () {
+        $('.m-item').toggleClass('m-mobile-hide');
+    });
+    $('.ui.dropdown').dropdown({
+        on: 'hover'
+    });
+</script>
+
+</html>

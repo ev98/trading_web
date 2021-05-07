@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: head(~{::title})">
+    <title>求购信息</title>
+</head>
+
+<body>
+<!-- 导航 -->
+<nav th:replace="fragments :: menu"></nav>
+
+<!--中间内容-->
+<div id="waypoint" class="m-padded-lr m-padded-tb-massive">
+    <div class="ui segment" style="background-color: white;">
+        <div class="ui teal segment">
+            <!--用户信息-->
+            <div style="height: 60px;">
+                <div class="m-detail-price m-post-left">
+                    <a th:href="@{/toUserDetail/{id}(id=${post.userId})}">
+                        <img class="ui bordered circular image m-detail-avatar-size"
+                             th:src="${post.user.avatar}" onerror="this.src='/images/avatar1.jpg'">
+                        <span class="m-detail-username" th:text="${post.user.name}">白色月牙</span>
+                    </a>
+                </div>
+                <div class="m-detail-price m-post-right">
+                    <i class="big calendar alternate outline teal icon"></i>
+                    <span class="m-detail-date" data-tooltip="发布日期"
+                          th:text="${#dates.format(post.updateTime, 'yyyy-MM-dd')}">2021-03-17</span>
+                </div>
+            </div>
+            <!--求购内容 -->
+            <div class="m-detail-detail">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>求购内容</legend>
+                </fieldset>
+                <div class="m-post-font">
+                    <span style="word-break:normal;" th:text="${post.content}">1800收日版续航版switch</span>
+                </div>
+            </div>
+        </div>
+        <!--评论-->
+        <div class="ui teal bottom segment" th:unless="${status}==1">
+            <div id="comment-container">
+                <div class="ui threaded comments" style="max-width: 100%;">
+                    <h3 class="ui dividing header">评论</h3>
+                    <div class="comment" th:each="comment : ${commentList}">
+                        <a class="avatar" th:href="@{/toUserDetail/{id}(id=${comment.userId})}">
+                            <img th:src="${comment.user.avatar}" onerror="this.src='/images/avatar1.jpg'">
+                        </a>
+                        <div class="content">
+                            <a class="author" th:href="@{/toUserDetail/{id}(id=${comment.userId})}">
+                                <span th:text="${comment.user.name}">Matt</span>
+                            </a>
+                            <div class="metadata">
+                                <span class="date" th:text="${#dates.format(comment.createTime,'yyyy-MM-dd HH:mm')}">Today at5:42PM</span>
+                            </div>
+                            <div class="text" th:text="${comment.content}">
+                                How artistic!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <form class="ui form" th:action="@{/releaseComment}" method="post">
+        <input type="hidden" name="postId" th:value="${post.id}">
+        <div class="field">
+            <textarea name="content" placeholder="请输入评论信息..."></textarea>
+        </div>
+        <div class="field  m-margin-bottom-small m-mobile-wide">
+            <button type="submit" class="ui teal button m-mobile-wide"><i
+                    class="edit icon"></i>发布
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- 底部 -->
+<footer th:replace="fragments :: footbar"></footer>
+
+<!--右下角浮动的图标-->
+<div id="toolbar" class="m-padded-tb-large m-fixed m-right-bottom" style="display: none">
+    <div id="toTop-button" class="ui teal icon button"><i class="chevron up icon"></i></div>
+</div>
+</body>
+
+<!--导入的script-->
+<th:block th:replace="fragments :: script">
+</th:block>
+
+</html>

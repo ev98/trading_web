@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: head(~{::title})">
+    <title>个人信息</title>
+</head>
+
+<body>
+<!-- 导航 -->
+<nav th:replace="fragments :: menu"></nav>
+
+<!-- 中间内容 -->
+<div id="waypoint" class="m-padded-lr m-padded-tb-massive">
+    <div class="ui column divided grid m-userInfo-bg">
+        <!-- 侧边栏 -->
+        <div th:replace="fragments :: sidebar(1)"></div>
+
+        <!-- 展示内容 -->
+        <div class="thirteen wide column">
+            <div class="ui orange segment m-user-height">
+                <h2 class="ui dividing header">我的资料</h2>
+                <form th:action="@{/uploadAvatar}" enctype="multipart/form-data" method="post">
+                    <div class="field m-margin-tb-small">
+                        <span class="m-userInfo-font">用户头像(点击上传)</span><br>
+                        <!-- 上传头像 -->
+                        <div class="form-group" id="group">
+                            <input type="file" id="img_input" name="file" accept="image/*">
+                            <label for="img_input"></label>
+                        </div>
+                        <!--预览图片-->
+                        <div class="preview_box"></div>
+                        <button type="submit" id="submitAvatar">上传</button>
+                    </div>
+                </form>
+                <form class="ui form" th:action="@{/updateUserInfo}" method="post" onsubmit="return check()">
+                    <input type="hidden" name="id" th:value="${session.user.id}">
+                    <div class="field m-margin-tb-small">
+                        <span class="m-userInfo-font">用户名</span>
+                        <div class="ui left icon input">
+                            <input type="text" th:value="${session.user.name}" name="name" id="nickname">
+                            <i class="user icon"></i>
+                            <label class="tip"></label>
+                        </div>
+                    </div>
+                    <div class="field m-margin-tb-small">
+                        <span class="m-userInfo-font">账号(不可修改)</span>
+                        <div class="ui left icon disabled input">
+                            <input type="text" th:value="${session.user.username}" name="username">
+                            <i class="coffee icon"></i>
+                        </div>
+                    </div>
+                    <div class="field m-margin-tb-small">
+                        <span class="m-userInfo-font">密码</span>
+                        <div class="ui left icon input">
+                            <input type="text" th:value="${session.user.password}" name="password" id="password">
+                            <i class="key icon"></i>
+                            <label class="tip"></label>
+                        </div>
+                    </div>
+                    <div class="field m-margin-tb-small">
+                        <span class="m-userInfo-font">手机号</span>
+                        <div class="ui left icon input">
+                            <input type="text" th:value="${session.user.phone}" name="phone" id="phone">
+                            <i class="phone icon"></i>
+                            <label class="tip"></label>
+                        </div>
+                    </div>
+                    <div class="field m-margin-tb-small">
+                        <span class="m-userInfo-font">邮箱</span>
+                        <div class="ui left icon input">
+                            <input type="text" th:value="${session.user.email}" name="email" id="email">
+                            <i class="mail icon"></i>
+                            <label class="tip"></label>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="ui red button" id="submit" type="submit" data-tooltip="点击修改个人信息">修改信息</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 底部 -->
+<footer th:replace="fragments :: footbar"></footer>
+
+<!--右下角浮动的图标-->
+<div id="toolbar" class="m-padded-tb-large m-fixed m-right-bottom" style="display: none">
+    <div id="toTop-button" class="ui teal icon button"><i class="chevron up icon"></i></div>
+</div>
+</body>
+
+<!--导入的script-->
+<th:block th:replace="fragments :: script">
+</th:block>
+<script th:src="@{/js/user/userInfo.js}"></script>
+
+</html>

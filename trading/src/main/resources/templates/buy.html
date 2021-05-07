@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: head(~{::title})">
+    <title>购买商品</title>
+</head>
+
+<body>
+<div>
+    <div class="m-userCollect-shop-image">
+        <img class="ui bordered rounded image m-userCollect-image-size" th:src="${commodity.firstPicture}"
+             onerror="this.src='/images/noimage.jpg'">
+    </div>
+    <div class="m-buy-shop-detail">
+        <div>
+            <span class="m-userCollect-shop-font" th:text="${commodity.CName}"></span>
+        </div>
+        <div class="m-userCollect-shop-price">
+            <span class="m-detail-shopPrice-icon">￥<span class="m-detail-shopPrice-number"
+                                                         th:text="${commodity.price}"></span></span>
+        </div>
+        <div th:if="${commodity.status==1}">
+            <form th:action="@{/buyCommodity/{id}(id=${commodity.id})}" method="post">
+                <button type="submit" class="ui teal button" style="margin-left: 165px; margin-top: 28px;">立即购买</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+
+<!--导入的script-->
+<th:block th:replace="fragments :: script">
+</th:block>
+
+<script th:inline="javascript">
+    var message = [[${message}]]; <!--接收值-->
+    $(function showData() {
+        if (message != null) {
+            alert(message);
+        }
+    });
+</script>
+
+</html>

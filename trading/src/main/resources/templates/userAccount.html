@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: head(~{::title})">
+    <title>我的钱包</title>
+</head>
+
+<body>
+<!-- 导航 -->
+<nav th:replace="fragments :: menu"></nav>
+
+<!-- 中间内容 -->
+<div id="waypoint" class="m-padded-lr m-padded-tb-massive">
+    <div class="ui column divided grid m-userInfo-bg">
+        <!-- 侧边栏 -->
+        <div th:replace="fragments :: sidebar(2)"></div>
+
+        <!-- 展示内容 -->
+        <div class="thirteen wide column">
+            <div class="ui orange segment m-user-height">
+                <h2 class="ui dividing header">我的钱包</h2>
+                <form class="ui big form">
+                    <div class="field m-padded-tb-small">
+                        <span class="m-userAccount-font">账户余额</span>
+                        <div class="ui left icon disabled input">
+                            <input type="text" th:value="${user.account}">
+                            <i class="yen sign icon"></i>
+                        </div>
+                    </div>
+                </form>
+                <div>
+                    <div class="ui top attached tabular menu">
+                        <a class="item active" data-tab="first">
+                            <h3 class="ui black header m-inline-block">充值</h3>
+                        </a>
+                        <a class="item" data-tab="second">
+                            <h3 class="ui black header m-inline-block">提现</h3>
+                        </a>
+                    </div>
+                    <!-- 充值 -->
+                    <div class="ui bottom attached tab active" data-tab="first">
+                        <div class="m-account-pay">
+                            <div class="m-account-left">
+                                <div class="ui people shape">
+                                    <div class="sides">
+                                        <div class="side active">
+                                            <div class="ui card">
+                                                <div class="image">
+                                                    <img class="m-pay-image" th:src="@{/images/alipay.jpg}">
+                                                </div>
+                                                <div class="extra content">
+                                                        <span class="m-alipay-font">
+                                                            支付宝
+                                                        </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="side">
+                                            <div class="ui card">
+                                                <div class="image">
+                                                    <img class="m-pay-image" th:src="@{/images/wechatpay.jpg}">
+                                                </div>
+                                                <div class="extra content">
+                                                        <span class="m-wechatpay-font">
+                                                            微信
+                                                        </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="margin-top: 15px;">
+                                    <div class="ui button over">改变支付方式</div>
+                                </div>
+                            </div>
+                            <div class="m-account-right">
+                                <form class="ui big form" th:action="@{/recharge}" method="post">
+                                    <div class="field m-padded-tb-small">
+                                        <span class="m-userAccount-font">请输入您要充值的金额</span>
+                                        <div class="ui left icon input" style="margin-top: 10px;">
+                                            <input type="text" placeholder="0.00" name="account">
+                                            <i class="yen sign icon"></i>
+                                        </div>
+                                        <button type="submit" class="ui teal button"
+                                                style="margin-top: 15px;">确认充值</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 提现 -->
+                    <div class="ui bottom attached tab" data-tab="second">
+                        <div class="m-account-pay">
+                            <form class="ui big form" th:action="@{/withdrawal}" method="post">
+                                <div class="field m-padded-tb-small">
+                                    <span class="m-userAccount-font">请输入您要提现的金额</span>
+                                    <div class="ui left icon input" style="margin-top: 10px;">
+                                        <input type="text" placeholder="0.00" name="account">
+                                        <i class="yen sign icon"></i>
+                                    </div>
+                                    <button type="submit" class="ui teal button"
+                                            style="margin-top: 15px;">确认提现</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 底部 -->
+<footer th:replace="fragments :: footbar"></footer>
+
+<!--右下角浮动的图标-->
+<div id="toolbar" class="m-padded-tb-large m-fixed m-right-bottom" style="display: none">
+    <div id="toTop-button" class="ui teal icon button"><i class="chevron up icon"></i></div>
+</div>
+</body>
+
+<th:block th:replace="fragments :: script">
+</th:block>
+<!--复选框-->
+<script type="text/javascript">
+    $('.menu .item')
+        .tab();
+</script>
+<!--立体旋转-->
+<script>
+    $('.shape').shape();
+    $('.over').click(function () {
+        // Make the shape flip up
+        $('.shape').shape('flip over');
+    })
+</script>
+
+</html>

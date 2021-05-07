@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="head(title)">  <!--title为传参-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:replace="${title}">校内交易网</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <link rel="stylesheet" th:href="@{/css/me.css}">
+</head>
+<body>
+
+<!--导航-->
+<nav th:fragment="menu(n)" class="ui attached segment m-padded-tb-mini">
+    <div class="ui container">
+        <div class="ui secondary stackable menu">
+            <h2 class="ui teal header item">后台管理</h2>
+            <a th:href="@{/admin/toCommodity}" class="m-item item m-mobile-hide" th:classappend="${n==1}?'active'"><i
+                    class="home icon"></i>商品</a>
+            <a th:href="@{/admin/toPost}" class="m-item item m-mobile-hide" th:classappend="${n==2}?'active'"><i
+                    class="tags icon"></i>求购</a>
+            <a th:href="@{/admin/toUser}" class="m-item item m-mobile-hide" th:classappend="${n==3}?'active'"><i
+                    class="user icon"></i>用户</a>
+            <div class="right m-item m-mobile-hide menu">
+                <div class="ui pointing dropdown link item">
+                    <div>
+                        <img class="ui bordered avatar image" th:src="${session.user.avatar}"
+                             onerror="this.src='/images/avatar1.jpg'">
+                        <span class="m-font-size" th:text="${session.user.name}">EV</span>
+                    </div>
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                        <a th:href="@{/admin/logout}" class="item">注销</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!--底部-->
+<footer th:fragment="footbar" class="m-padded-tb-big m-footer">
+    <div class="m-padded-lr">
+        <!-- 1 -->
+        <div class="ui five column doubling stackable divided grid">
+            <div class="column">
+                <div class="ui inverted link list">
+                    <div class="m-footer-position">
+                        <i class="large tv icon"></i><span class="m-font-footer">校园交易</span>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="ui inverted link list">
+                    <div class="m-footer-position">
+                        <i class="large star outline icon"></i><span class="m-font-footer">快乐购物</span>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="ui inverted link list">
+                    <div class="m-footer-position">
+                        <i class="large bookmark outline icon"></i><span class="m-font-footer">种类丰富</span>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="ui inverted link list">
+                    <div class="m-footer-position">
+                        <i class="large paper plane outline icon"></i><span class="m-font-footer">方便你我</span>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="ui inverted link list">
+                    <div class="m-footer-position">
+                        <i class="large heart outline icon"></i><span class="m-font-footer">用心服务</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ui inverted section divider"></div>
+        <!-- 2 -->
+        <div class="ui five column doubling stackable divided grid m-padded-tb-large">
+            <div class="column">
+                <div class="ui inverted link list">
+                    <div class="m-footer-position-2">
+                        <div class="m-footer-font-1">帮助中心</div>
+                        <br>
+                        <div class="m-footer-font-2">账户管理</div>
+                        <div class="m-footer-font-2">购物指南</div>
+                        <div class="m-footer-font-2">订单操作</div>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="ui inverted link list">
+                    <div class="m-footer-position-2">
+                        <div class="m-footer-font-1">联系我们</div>
+                        <br>
+                        <div class="m-footer-font-2">Tel：13653951918</div>
+                        <div class="m-footer-font-2">QQ：1301493116</div>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="ui inverted link list">
+                    <div class="m-footer-position-2">
+                        <div class="m-footer-font-1">关注我们</div>
+                        <br>
+                        <div class="m-footer-font-2">新浪微博</div>
+                        <div class="m-footer-font-2">官方微信</div>
+                        <div class="m-footer-font-2">Github/码云</div>
+                    </div>
+                </div>
+            </div>
+            <div class="two column">
+                <div class="ui inverted link list">
+                    <div class="m-footer-position-3">
+                        <div class="m-footer-font-1">关于网站</div>
+                        <br>
+                        <div class="m-footer-font-2 m-text-spaced">校内交易网，为同学们提供一个校园内部闲置物品交易与置换的平台</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ui inverted section divider"></div>
+        <!-- 3 -->
+        <div>
+            <span class="m-font-footer-logo">闲置，非旧货。置换，新生活。</span>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

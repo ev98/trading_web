@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ev.trading.dao.CommodityDao">
+
+    <resultMap id="commodity" type="com.ev.trading.entity.Commodity">
+        <id property="id" column="id"/>
+        <result property="cName" column="c_name"/>
+        <result property="price" column="price"/>
+        <result property="startPrice" column="start_price"/>
+        <result property="description" column="description"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="view" column="view"/>
+        <result property="status" column="status"/>
+        <result property="imgIds" column="img_ids"/>
+        <result property="userId" column="user_id"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="firstPicture" column="first_picture"/>
+
+        <association property="user" javaType="com.ev.trading.entity.User">
+            <id property="id" column="id"/>
+            <result property="name" column="name"/>
+            <result property="username" column="username"/>
+            <result property="password" column="password"/>
+            <result property="phone" column="phone"/>
+            <result property="email" column="email"/>
+            <result property="avatar" column="avatar"/>
+            <result property="account" column="account"/>
+            <result property="role" column="role"/>
+            <result property="createTime" column="create_time"/>
+        </association>
+        <association property="category" javaType="com.ev.trading.entity.Category">
+            <id property="id" column="id"/>
+            <result property="caName" column="ca_name"/>
+        </association>
+    </resultMap>
+
+    <select id="findCommodityBySearch" resultMap="commodity">
+        <bind name="pattern" value="'%' + cName + '%'"/>
+        SELECT *
+        FROM commodity co,USER u,category ca
+        <where>
+            <if test="1 == 1">
+                co.`user_id`=u.`id` and co.`category_id`=ca.`id` and co.status != 2
+            </if>
+            <if test="cName !=null and cName != ''">
+                and co.c_name like #{pattern}
+            </if>
+            <if test="categoryId != null and categoryId != ''">
+                and co.category_id = #{categoryId}
+            </if>
+            <if test="status != null">
+                and co.status = #{status}
+            </if>
+        </where>
+        ORDER BY co.`update_time` DESC
+    </select>
+
+    <select id="findAllCommodityByTime013" resultMap="commodity">
+        SELECT *
+        FROM commodity co,USER u,category ca
+        WHERE co.`user_id`=u.`id` AND co.`category_id`=ca.`id` AND co.status != 2 ORDER BY co.`update_time` DESC
+    </select>
+
+    <update id="updateView">
+        update commodity set view =#{view2} where id=#{id}
+    </update>
+
+    <select id="findAllByUserId12" resultMap="commodity">
+        SELECT *
+        FROM commodity co,USER u,category ca
+        WHERE co.`user_id`=u.`id` AND co.`category_id`=ca.`id` AND co.user_id = #{id} AND co.status != 0 AND co.status != 3 ORDER BY co.`update_time` DESC
+    </select>
+
+    <update id="updateStatusTo1">
+        update commodity set status=1 where id=#{id}
+    </update>
+
+    <update id="updateStatusTo3">
+        update commodity set status=3 where id=#{id}
+    </update>
+
+    <update id="updateStatusTo2">
+        update commodity set status=2 , update_time=#{date}  where id=#{id}
+    </update>
+
+    <select id="searchByPriceDesc" resultMap="commodity">
+        SELECT *
+        FROM commodity co,USER u,category ca
+        WHERE co.`user_id`=u.`id` AND co.`category_id`=ca.`id` AND co.status = 1 AND co.c_name LIKE concat('%',#{query},'%') ORDER BY co.price DESC
+    </select>
+
+    <select id="searchByPriceAsc" resultMap="commodity">
+        SELECT *
+        FROM commodity co,USER u,category ca
+        WHERE co.`user_id`=u.`id` AND co.`category_id`=ca.`id` AND co.status = 1 AND co.c_name LIKE concat('%',#{query},'%') ORDER BY co.price ASC
+    </select>
+
+    <select id="searchByTime" resultMap="commodity">
+        SELECT *
+        FROM commodity co,USER u,category ca
+        WHERE co.`user_id`=u.`id` AND co.`category_id`=ca.`id` AND co.status = 1 AND co.c_name LIKE concat('%',#{query},'%') ORDER BY co.update_time DESC
+    </select>
+
+    <select id="searchByView" resultMap="commodity">
+        SELECT *
+        FROM commodity co,USER u,category ca
+        WHERE co.`user_id`=u.`id` AND co.`category_id`=ca.`id` AND co.status = 1 AND co.c_name LIKE concat('%',#{query},'%') ORDER BY co.`view` DESC
+    </select>
+
+    <select id="search" resultMap="commodity">
+        SELECT co.id,co.c_name,co.price,co.update_time,co.view,co.status,co.user_id,co.img_ids,co.first_picture,u.id,u.name,u.avatar
+        FROM commodity co,USER u,category ca
+        WHERE co.`user_id`=u.`id` AND co.`category_id`=ca.`id` AND co.status = 1 AND c_name LIKE concat('%',#{query},'%')
+    </select>
+
+    <select id="findAllByCategoryIdAndPriceDesc" resultMap="commodity">
+        SELECT *
+        FROM commodity co,USER u,category ca
+        WHERE co.`user_id`=u.`id` AND co.`category_id`=ca.`id` AND co.status = 1 AND co.category_id = #{id} ORDER BY co.price DESC
+    </select>
+
+    <select id="findAllByCategoryIdAndPriceAsc" resultMap="commodity">
+        SELECT *
+        FROM commodity co,USER u,category ca
+        WHERE co.`user_id`=u.`id` AND co.`category_id`=ca.`id` AND co.status = 1 AND co.category_id = #{id} ORDER BY co.price ASC
+    </select>
+
+    <select id="findAllByCategoryIdAndUpdateTime" resultMap="commodity">
+        SELECT *
+        FROM commodity co,USER u,category ca
+        WHERE co.`user_id`=u.`id` AND co.`category_id`=ca.`id` AND co.status = 1 AND co.category_id = #{id} ORDER BY co.update_time DESC
+    </select>
+
+    <select id="findAllByCategoryIdAndViews" resultMap="commodity">
+        SELECT *
+        FROM commodity co,USER u,category ca
+        WHERE co.`user_id`=u.`id` AND co.`category_id`=ca.`id` AND co.status = 1 AND co.category_id = #{id} ORDER BY co.`view` DESC
+    </select>
+
+    <select id="findByIds" resultMap="commodity">
+        SELECT *
+        FROM commodity co,USER u,category ca
+        WHERE co.`user_id`=u.`id` AND co.`category_id`=ca.`id` AND co.id IN
+        <foreach collection="collectCommodityIds" item="collectCommodityIds" open="(" separator="," close=")">
+            #{collectCommodityIds}
+        </foreach>
+        ORDER BY FIELD
+        <foreach collection="collectCommodityIds" item="collectCommodityIds" open="(co.id," separator="," close=")">
+            #{collectCommodityIds}
+        </foreach>
+    </select>
+
+    <select id="findById" resultMap="commodity">
+        SELECT *
+        FROM commodity co,USER u,category ca
+        WHERE co.`user_id`=u.`id` AND co.`category_id`=ca.`id` AND co.id = #{id}
+    </select>
+
+    <select id="findAllByUserId013" resultMap="commodity">
+        SELECT *
+        FROM commodity co,USER u,category ca
+        WHERE co.`user_id`=u.`id` AND co.`category_id`=ca.`id` AND co.user_id = #{id} AND co.status != 2 ORDER BY co.`update_time` DESC
+    </select>
+
+    <select id="findAllByUserId" resultMap="commodity">
+        SELECT *
+        FROM commodity co,USER u,category ca
+        WHERE co.`user_id`=u.`id` AND co.`category_id`=ca.`id` AND co.user_id = #{id} ORDER BY co.`update_time` DESC
+    </select>
+
+    <select id="findAll" resultMap="commodity">
+        SELECT *
+        FROM commodity co,USER u,category ca
+        WHERE co.`user_id`=u.`id` AND co.`category_id`=ca.`id`
+    </select>
+
+    <select id="findAllCommodityByView" resultMap="commodity">
+        SELECT *
+        FROM commodity co,USER u,category ca
+        WHERE co.`user_id`=u.`id` AND co.`category_id`=ca.`id` AND co.status = 1 ORDER BY co.`view` DESC
+    </select>
+
+    <select id="findAllCommodityByTime" resultMap="commodity">
+        SELECT *
+        FROM commodity co,USER u,category ca
+        WHERE co.`user_id`=u.`id` AND co.`category_id`=ca.`id` AND co.status = 1 ORDER BY co.`update_time` DESC
+    </select>
+
+    <update id="updateFirstPicture">
+        update commodity set first_picture=#{firstPicture} where id=#{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: head(~{::title})">
+    <title>修改求购信息</title>
+</head>
+
+<body>
+<!-- 导航 -->
+<nav th:replace="fragments :: menu"></nav>
+
+<!--中间内容-->
+<div id="waypoint" class="m-padded-lr m-padded-tb-bottom">
+    <form class="ui form" id="goodsForm" th:action="@{/updatePost}" method="post">
+        <input type="hidden" name="id" th:value="${post.id}">
+        <!-- 求购内容 -->
+        <div class="m-padded-tb-top">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>求购内容</legend>
+            </fieldset>
+            <div class="m-padded-lr-textarea field">
+                    <textarea name="content" maxlength="512" class="m-textarea"
+                              th:text="${post.content}"
+                              placeholder="品牌型号，求购价格..."></textarea>
+            </div>
+        </div>
+        <!-- 发布按钮 -->
+        <div class="m-padded-tb-top m-padded-lr-textarea">
+            <button type="submit" class="large ui teal button" id="release">修改求购</button>
+        </div>
+        <div class="ui error message"></div>
+    </form>
+</div>
+
+
+<!-- 底部 -->
+<footer th:replace="fragments :: footbar"></footer>
+
+<!--右下角浮动的图标-->
+<div id="toolbar" class="m-padded-tb-large m-fixed m-right-bottom" style="display: none">
+    <div id="toTop-button" class="ui teal icon button"><i class="chevron up icon"></i></div>
+</div>
+</body>
+
+<!--导入的script-->
+<th:block th:replace="fragments :: script">
+</th:block>
+<script type="text/javascript" th:src="@{/js/user/releasePost.js}"></script>
+
+</html>

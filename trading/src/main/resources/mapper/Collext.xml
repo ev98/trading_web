@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ev.trading.dao.CollectDao">
+
+    <resultMap id="collect" type="com.ev.trading.entity.Collect">
+        <id property="id" column="id"/>
+        <result property="collectTime" column="collect_time"/>
+        <result property="collectUserId" column="collect_user_id"/>
+        <result property="collectCommodityId" column="collect_commodity_id"/>
+
+        <association property="user" javaType="com.ev.trading.entity.User">
+            <id property="id" column="id"/>
+            <result property="name" column="name"/>
+            <result property="username" column="username"/>
+            <result property="password" column="password"/>
+            <result property="phone" column="phone"/>
+            <result property="email" column="email"/>
+            <result property="avatar" column="avatar"/>
+            <result property="account" column="account"/>
+            <result property="role" column="role"/>
+            <result property="createTime" column="create_time"/>
+        </association>
+        <association property="commodity" javaType="com.ev.trading.entity.Commodity">
+            <id property="id" column="id"/>
+            <result property="cName" column="c_name"/>
+            <result property="price" column="price"/>
+            <result property="startPrice" column="start_price"/>
+            <result property="description" column="description"/>
+            <result property="createTime" column="create_time"/>
+            <result property="updateTime" column="update_time"/>
+            <result property="view" column="view"/>
+            <result property="status" column="status"/>
+            <result property="imgIds" column="img_ids"/>
+            <result property="userId" column="user_id"/>
+            <result property="categoryId" column="category_id"/>
+            <result property="firstPicture" column="first_picture"/>
+        </association>
+    </resultMap>
+
+    <select id="listByUserId" resultMap="collect">
+        SELECT *
+        FROM collect col,user u,commodity com
+        WHERE col.collect_user_id=u.id AND col.collect_commodity_id=com.id AND col.collect_user_id=#{id} ORDER BY col.collect_time DESC
+    </select>
+
+    <select id="getOneById" resultMap="collect">
+        SELECT *
+        FROM collect col,user u,commodity com
+        WHERE col.collect_user_id=u.id AND col.collect_commodity_id=com.id AND col.collect_user_id=#{userId} AND col.collect_commodity_id=#{commodityId}
+    </select>
+
+</mapper>

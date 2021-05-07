@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: head(~{::title})">
+    <title>校内交易网</title>
+</head>
+
+<body>
+<!-- 导航 -->
+<nav th:replace="fragments :: menu"></nav>
+
+<!-- 头部内容 -->
+<div id="waypoint" class="m-padded-tb-carousel m-footer">
+    <div class="m-padded-lr">
+        <!-- 轮播图 -->
+        <div class="m-padded-tb-small">
+            <div class="layui-carousel" id="indexCarousel">
+                <div carousel-item>
+                    <div><img th:src="@{/images/carousel/carousel1.png}" class="m-image-carousel-size"></div>
+                    <div><img th:src="@{/images/carousel/carousel2.png}" class="m-image-carousel-size"></div>
+                    <div><img th:src="@{/images/carousel/carousel3.png}" class="m-image-carousel-size"></div>
+                    <div><img th:src="@{/images/carousel/carousel4.jpg}" class="m-image-carousel-size"></div>
+                    <div><img th:src="@{/images/carousel/carousel5.jpg}" class="m-image-carousel-size"></div>
+                </div>
+            </div>
+        </div>
+        <!-- 分类跳转 -->
+        <div class="ui seven column doubling stackable divided grid m-padded-tb-big">
+            <div class="column" th:each="category : ${categoryList}">
+                <div class="ui inverted link list">
+                    <a th:href="@{/toCategory/{id}(id = ${category.id})}" class="m-top-position">
+                        <i class="large mobile alternate icon" th:if="${category.id==1}"></i>
+                        <i class="large bicycle icon" th:if="${category.id==2}"></i>
+                        <i class="large book icon" th:if="${category.id==3}"></i>
+                        <i class="large futbol icon" th:if="${category.id==4}"></i>
+                        <i class="large user icon" th:if="${category.id==5}"></i>
+                        <i class="large shopping bag icon" th:if="${category.id==6}"></i>
+                        <i class="large paint brush icon" th:if="${category.id==7}"></i>
+                        <span class="m-font-footer" th:text="${category.caName}">数码产品</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 中间内容 -->
+<div class="m-padded-lr m-padded-tb-bottom">
+    <!-- 热门商品 -->
+    <div class="m-padded-tb-mini">
+        <!-- 标题 -->
+        <div class="m-padded-tb-title">
+            <div>
+                <span class="m-font-size-large">热门商品</span>
+                <a th:href="@{/toPopularCommodity}" class="m-font-title">查看全部<i class="angle double right icon"></i></a>
+            </div>
+        </div>
+        <!-- 商品 -->
+        <div class="ui four column doubling stackable grid m-padded-tb-small">
+            <div class="column m-padded-tb-tiny" th:each="commodityByView : ${commoditiesByView}">
+                <div class="m-image-shadow">
+                    <a th:href="@{/commodityDetail/{id}(id=${commodityByView.id})}">
+                        <!-- 商品图片 -->
+                        <img class="m-image-size" th:src="${commodityByView.firstPicture}"
+                             onerror="this.src='/images/noimage.jpg'">
+                        <!-- 商品详情 -->
+                        <div class="m-font-shop-detail" th:text="${commodityByView.CName}">商品名称</div>
+                        <div>
+                            <i class="yen sign icon m-font-shop-price"><span
+                                    class="m-font-shop-price-number" th:text="${commodityByView.price}">2333</span></i>
+                            <span class="m-font-shop-want"><span th:text="${commodityByView.view}">432</span>人想要</span>
+                        </div>
+                        <div class="m-font-shop-avatar">
+                            <img class="ui bordered avatar image" th:src="${commodityByView.user.avatar}"
+                                 onerror="this.src='/images/avatar1.jpg'">
+                            <span class="m-font-shop-username" th:text="${commodityByView.user.name}">小瘦子</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 最新发布 -->
+    <div class="m-padded-tb-mini">
+        <!-- 标题 -->
+        <div class="m-padded-tb-title">
+            <div>
+                <span class="m-font-size-large">最新发布</span>
+                <a th:href="@{/toNewCommodity}" class="m-font-title">查看全部<i class="angle double right icon"></i></a>
+            </div>
+        </div>
+        <!-- 商品 -->
+        <div class="ui four column doubling stackable grid m-padded-tb-small">
+            <div class="column m-padded-tb-tiny" th:each="commodityByTime : ${commoditiesByTime}">
+                <div class="m-image-shadow">
+                    <a th:href="@{/commodityDetail/{id}(id=${commodityByTime.id})}">
+                        <!-- 商品图片 -->
+                        <img class="m-image-size" th:src="${commodityByTime.firstPicture}"
+                             onerror="this.src='/images/noimage.jpg'">
+                        <!-- 商品详情 -->
+                        <div class="m-font-shop-detail" th:text="${commodityByTime.CName}">商品名称</div>
+                        <div>
+                            <i class="yen sign icon m-font-shop-price"><span
+                                    class="m-font-shop-price-number" th:text="${commodityByTime.price}">2333</span></i>
+                            <span class="m-font-shop-want"><span th:text="${commodityByTime.view}">432</span>人想要</span>
+                        </div>
+                        <div class="m-font-shop-avatar">
+                            <img class="ui bordered avatar image" th:src="${commodityByTime.user.avatar}"
+                                 onerror="this.src='/images/avatar1.jpg'">
+                            <span class="m-font-shop-username" th:text="${commodityByTime.user.name}">小瘦子</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 底部 -->
+<footer th:replace="fragments :: footbar"></footer>
+
+<!--右下角浮动的图标-->
+<div id="toolbar" class="m-padded-tb-large m-fixed m-right-bottom" style="display: none">
+    <div id="toTop-button" class="ui teal icon button"><i class="chevron up icon"></i></div>
+</div>
+</body>
+
+<!--导入的script-->
+<th:block th:replace="fragments :: script">
+</th:block>
+<script th:src="@{/js/user/index.js}"></script>
+
+</html>

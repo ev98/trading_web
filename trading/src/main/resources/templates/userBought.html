@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: head(~{::title})">
+    <title>我买到的</title>
+</head>
+
+<body>
+<!-- 导航 -->
+<nav th:replace="fragments :: menu"></nav>
+
+<!-- 中间内容 -->
+<div id="waypoint" class="m-padded-lr m-padded-tb-massive">
+    <div class="ui column divided grid m-userCollect-bg">
+        <!-- 侧边栏 -->
+        <div th:replace="fragments :: sidebar(7)"></div>
+
+        <!-- 展示内容 -->
+        <div class="thirteen wide column">
+            <div class="ui orange segment m-userCollect-height">
+                <div style="height: 700px">
+                    <!-- 头部-->
+                    <div class="ui dividing header">
+                        <div class="m-userCollect-shop-head">我买到的</div>
+                        <div class="ui orange label m-userCollect-shop-total">共<span
+                                th:text="${pageInfo.total}">0</span>个
+                        </div>
+                    </div>
+                    <!-- 商品信息-->
+                    <div class="m-userCollect-none" th:if="${none}==1">
+                        <a th:href="@{/toPopularCommodity}">
+                            您还未购买任何商品，快去看看感兴趣的商品吧！
+                        </a>
+                    </div>
+                    <div th:each="commodity : ${commodityList}">
+                        <div class="ui segment m-userCollect-segment-height">
+                            <!-- 1 -->
+                            <div class="m-margin-bottom-small">
+                                <div class="m-userCollect-user-left">
+                                    <a>
+                                        <img class="ui bordered avatar image" th:src="${commodity.user.avatar}"
+                                             onerror="this.src='/images/avatar1.jpg'">
+                                        <span class="m-font-size" th:text="${commodity.user.name}">啦啦啦</span>
+                                    </a>
+                                </div>
+                                <div class="m-userCollect-user-right">
+                                    <span class="m-userCollect-shop-status0" th:if="${commodity.status==2}">交易完成</span>
+                                </div>
+                            </div>
+                            <!-- 2 -->
+                            <div>
+                                <!-- 2.1 -->
+                                <div class="m-userCollect-shop-left">
+                                    <a th:href="@{/commodityDetail/{id}(id=${commodity.id})}">
+                                        <div class="m-userCollect-shop-image">
+                                            <img class="ui bordered rounded image m-userCollect-image-size"
+                                                 th:src="${commodity.firstPicture}"
+                                                 onerror="this.src='/images/noimage.jpg'">
+                                        </div>
+                                    </a>
+                                    <div class="m-userCollect-shop-detail">
+                                        <div>
+                                            <a th:href="@{/commodityDetail/{id}(id=${commodity.id})}">
+                                            <span class="m-userCollect-shop-font"
+                                                  th:text="${commodity.CName}">商品名称</span>
+                                            </a>
+                                        </div>
+                                        <div class="m-userCollect-shop-price">
+                                            <a th:href="@{/commodityDetail/{id}(id=${commodity.id})}">
+                                            <span class="m-detail-shopPrice-icon">￥<span
+                                                    class="m-userCollect-shopPrice-number" th:text="${commodity.price}">288.88</span></span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 分页 -->
+                <div class="m-userCollect-page-position">
+                        <span>
+                            <a th:href="@{/toUserBought(pageNum=${pageInfo.hasPreviousPage}?${pageInfo.prePage}:1)}"
+                               class="m-font-left"><i class="angle left icon"></i>上一页</a>
+                        </span>
+                    <span class="m-userCollect-page">
+                            <span th:text="${pageInfo.pageNum}">1</span>/<span th:text="${pageInfo.pages}">3</span>
+                        </span>
+                    <span>
+                            <a th:href="@{/toUserBought(pageNum=${pageInfo.hasNextPage}?${pageInfo.nextPage}:${pageInfo.pages})}"
+                               class="m-font-right">下一页<i class="angle right icon"></i></a>
+                        </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 底部 -->
+<footer th:replace="fragments :: footbar"></footer>
+
+<!--右下角浮动的图标-->
+<div id="toolbar" class="m-padded-tb-large m-fixed m-right-bottom" style="display: none">
+    <div id="toTop-button" class="ui teal icon button"><i class="chevron up icon"></i></div>
+</div>
+</body>
+
+<!--导入的script-->
+<th:block th:replace="fragments :: script">
+</th:block>
+
+</html>

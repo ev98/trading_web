@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: head(~{::title})">
+    <title>发布商品</title>
+</head>
+
+<body>
+<!-- 导航 -->
+<nav th:replace="fragments :: menu"></nav>
+
+<!-- 中间内容 -->
+<div id="waypoint" class="m-padded-lr m-padded-tb-bottom">
+    <form class="ui form" id="goodsForm" th:action="@{/updateCommodity}" method="post">
+        <input type="hidden" th:value="${commodityInfo.id}" name="id">
+        <!-- 商品名称 -->
+        <div class="m-padded-tb-top">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>商品名称</legend>
+            </fieldset>
+            <div class="m-padded-lr-textarea field">
+                <input name="cName" type="text" th:value="${commodityInfo.CName}" placeholder="商品名称" class="m-input-text">
+            </div>
+        </div>
+        <!-- 商品分类 -->
+        <div class="m-padded-tb-top">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>商品分类</legend>
+            </fieldset>
+            <div class="m-padded-lr-textarea field">
+                <select name="categoryId" class="m-input-text">
+                    <option value="1" th:selected="${commodityInfo.categoryId==1}">数码产品</option>
+                    <option value="2" th:selected="${commodityInfo.categoryId==2}">校园代步</option>
+                    <option value="3" th:selected="${commodityInfo.categoryId==3}">图书教材</option>
+                    <option value="4" th:selected="${commodityInfo.categoryId==4}">运动棋牌</option>
+                    <option value="5" th:selected="${commodityInfo.categoryId==5}">闲置服饰</option>
+                    <option value="6" th:selected="${commodityInfo.categoryId==6}">生活用品</option>
+                    <option value="7" th:selected="${commodityInfo.categoryId==7}">美肤彩妆</option>
+                </select>
+            </div>
+        </div>
+        <!-- 商品详情 -->
+        <div class="m-padded-tb-top">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>商品描述</legend>
+            </fieldset>
+            <div class="m-padded-lr-textarea field">
+                    <textarea name="description" maxlength="512" class="m-textarea"
+                              th:text="${commodityInfo.description}"
+                              placeholder="品牌型号，新旧程度，入手渠道，转手原因..."></textarea>
+            </div>
+        </div>
+        <!-- 商品价格 -->
+        <div class="m-padded-tb-top">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>商品价格</legend>
+            </fieldset>
+            <div class="m-padded-lr-textarea field">
+                <input name="price" type="text" th:value="${commodityInfo.price}" placeholder="￥0.00"
+                       class="m-input-text">
+            </div>
+        </div>
+        <div class="m-padded-tb-top">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>入手价格</legend>
+            </fieldset>
+            <div class="m-padded-lr-textarea field">
+                <input name="startPrice" type="text" th:value="${commodityInfo.startPrice}" placeholder="￥0.00"
+                       class="m-input-text">
+            </div>
+        </div>
+        <!-- 发布按钮 -->
+        <div class="m-padded-tb-top m-padded-lr-textarea" style="position: absolute;margin-top: 360px;">
+            <button type="submit" class="large ui teal button" id="release">修改商品</button>
+            <a th:href="@{/toUserRelease}">
+                <button type="button" class="large ui teal button" data-tooltip="返回我的发布页面">返回</button>
+            </a>
+        </div>
+        <div class="ui error message"></div>
+    </form>
+    <!-- 商品主图 -->
+    <div class="m-padded-tb-top" style="height: 350px; margin-bottom: 40px;">
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>商品图片</legend>
+        </fieldset>
+        <div class="layui-upload m-padded-lr-textarea">
+            <button type="button" class="ui blue button" id="testList">选择图片</button>
+            <button type="button" class="ui teal button" id="testListAction">上传图片
+            </button>
+            <input class="layui-upload-file" type="file" accept="undefined" name="file" multiple="">
+            <div class="layui-upload-list">
+                <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <th>文件名</th>
+                        <th>大小</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="demoList"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 底部 -->
+<footer th:replace="fragments :: footbar"></footer>
+
+<!--右下角浮动的图标-->
+<div id="toolbar" class="m-padded-tb-large m-fixed m-right-bottom" style="display: none">
+    <div id="toTop-button" class="ui teal icon button"><i class="chevron up icon"></i></div>
+</div>
+
+</body>
+
+<!--导入的script-->
+<th:block th:replace="fragments :: script">
+</th:block>
+<script type="text/javascript" th:src="@{/js/user/release.js}"></script>
+
+</html>

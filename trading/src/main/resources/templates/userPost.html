@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: head(~{::title})">
+    <title>我的求购</title>
+</head>
+
+<body>
+<!-- 导航 -->
+<nav th:replace="fragments :: menu"></nav>
+
+<!-- 中间内容 -->
+<div id="waypoint" class="m-padded-lr m-padded-tb-massive">
+    <div class="ui column divided grid m-userCollect-bg">
+        <!-- 侧边栏 -->
+        <div th:replace="fragments :: sidebar(4)"></div>
+
+        <!-- 展示内容 -->
+        <div class="thirteen wide column">
+            <div class="ui orange segment m-userCollect-height">
+                <div style="height: 700px">
+                    <!-- 头部-->
+                    <div class="ui dividing header">
+                        <div class="m-userCollect-shop-head">我的求购</div>
+                        <div class="ui orange label m-userCollect-shop-total">共<span
+                                th:text="${pageInfo.total}">0</span>个
+                        </div>
+                    </div>
+                    <!-- 商品信息-->
+                    <div class="m-userCollect-none" th:if="${none}==1">
+                        <a th:href="@{/toPurchase}">
+                            您还未求购任何商品，快去求购商品吧！
+                        </a>
+                    </div>
+                    <div th:each="post : ${postList}">
+                        <div class="ui segment m-userCollect-segment-height">
+                            <!-- 1 -->
+                            <div class="m-userPost-1">
+                                <a th:text="${post.content}"
+                                   th:href="@{/post/{id}(id=${post.id})}">你真的理解什么是财富自由吗?你真的理解什么是财富自由吗?你真的理解什么是财富自由吗?你真的理解什么是财富自由吗?你真的理解什么是财富自由吗?你真的理解什么是财富自由吗?你真的理解什么是财富自由吗?你真的理解什么是财富自由吗?
+                                </a>
+                            </div>
+                            <!-- 2 -->
+                            <div class="m-userPost-2">
+                                <!-- 2.1 -->
+                                <div class="m-detail-price m-userPost-left">
+                                    <i class="big calendar alternate outline teal icon"></i>
+                                    <span class="m-detail-date" data-tooltip="发布日期"
+                                          th:text="${#dates.format(post.updateTime, 'yyyy-MM-dd')}">2021-03-17</span>
+                                </div>
+                                <!-- 2.2 -->
+                                <div class="m-userPost-right">
+                                    <a class="delete" th:href="@{/toDeletePost/{id}(id=${post.id})}">
+                                        <button class="m-userCollect-button ui red small button">
+                                            删除求购
+                                        </button>
+                                    </a>
+                                    <a th:href="@{/toUpdatePost/{id}(id=${post.id})}">
+                                        <button class="m-userCollect-button ui teal small button">
+                                            修改求购
+                                        </button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 分页 -->
+                <div class="m-userCollect-page-position">
+                        <span>
+                            <a th:href="@{/toUserPost(pageNum=${pageInfo.hasPreviousPage}?${pageInfo.prePage}:1)}"
+                               class="m-font-left"><i class="angle left icon"></i>上一页</a>
+                        </span>
+                    <span class="m-userCollect-page">
+                            <span th:text="${pageInfo.pageNum}">1</span>/<span th:text="${pageInfo.pages}">3</span>
+                        </span>
+                    <span>
+                            <a th:href="@{/toUserPost(pageNum=${pageInfo.hasNextPage}?${pageInfo.nextPage}:${pageInfo.pages})}"
+                               class="m-font-right">下一页<i class="angle right icon"></i></a>
+                        </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 底部 -->
+<footer th:replace="fragments :: footbar"></footer>
+
+<!--右下角浮动的图标-->
+<div id="toolbar" class="m-padded-tb-large m-fixed m-right-bottom" style="display: none">
+    <div id="toTop-button" class="ui teal icon button"><i class="chevron up icon"></i></div>
+</div>
+</body>
+
+<!--导入的script-->
+<th:block th:replace="fragments :: script">
+</th:block>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".delete").click(function () {
+            if (confirm("确定删除该求购吗")) {
+                return true;
+            }
+            return false;
+        });
+    });
+</script>
+
+</html>

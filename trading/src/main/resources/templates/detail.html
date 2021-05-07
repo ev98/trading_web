@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments :: head(~{::title})">
+    <title>商品详情</title>
+</head>
+<link rel="stylesheet" th:href="@{/css/zoomify.min.css}">
+<link rel="stylesheet" th:href="@{/css/style.css}">
+
+<body>
+<!-- 导航 -->
+<nav th:replace="fragments :: menu"></nav>
+
+<!-- 中间内容 -->
+<div id="waypoint" class="m-padded-lr m-padded-tb-massive">
+    <div class="ui segment two column doubling stackable grid m-picture-bg">
+        <!-- 图片 -->
+        <div class="column m-padded-tb-tiny">
+            <div class="picture-big example">
+                <img th:src="${commodity.firstPicture}" onerror="this.src='/images/noimage.jpg'" class="img-responsive"
+                     id="pic"/>
+            </div>
+            <div class="picture-small">
+                <div class="picture-small-li" th:each="image : ${images}">
+                    <li th:id="${image.id}"><img th:src="${image.url}"/></li>
+                </div>
+            </div>
+            <!--获取images-->
+            <div th:each="image : ${images}">
+                <input type="hidden" name="imageId" th:value="${image.id}"/>
+                <input type="hidden" name="imageUrl" th:value="${image.url}"/>
+            </div>
+
+        </div>
+        <!-- 信息 -->
+        <div class="column m-padded-tb-tiny">
+            <!-- 商品名称 -->
+            <div class="m-detail-shopName" th:text="${commodity.CName}">
+                商品名称shopName
+            </div>
+            <!-- 商品价格 -->
+            <div class="m-detail-price">
+                <span class="m-detail-shopPrice-icon">￥<span class="m-detail-shopPrice-number"
+                                                             th:text="${commodity.price}">288.88</span></span>
+                <span class="m-detail-startPrice-number">￥<span th:text="${commodity.startPrice}">1678</span></span>
+            </div>
+            <!-- 商品详情 -->
+            <div class="m-detail-detail">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>商品详情</legend>
+                </fieldset>
+                <div class="m-detail-detail-font" th:text="${commodity.description}">
+                    商品详情
+                </div>
+            </div>
+            <div class="ui divider"></div>
+            <!-- 用户 -->
+            <div class="m-detail-price">
+                <a th:href="@{/toUserDetail/{id}(id=${commodity.userId})}">
+                    <img class="ui bordered circular image m-detail-avatar-size" th:src="${commodity.user.avatar}"
+                         onerror="this.src='/images/avatar1.jpg'">
+                    <span class="m-detail-username" th:text="${commodity.user.name}">白色月牙</span>
+                </a>
+            </div>
+            <!-- 发布日期 -->
+            <div class="m-detail-price m-detail-date-icon">
+                <i class=" big calendar alternate outline teal icon"></i>
+                <span class="m-detail-date" data-tooltip="发布日期"
+                      th:text="${#dates.format(commodity.updateTime,'yyyy-MM-dd')}">2021-03-17</span>
+            </div>
+            <!-- 想要,收藏 -->
+            <div class="m-detail-buy" th:if="${commodity.status == 1}">
+                <div class="m-detail-chat">
+                    <a th:if="${session.user == null}" th:href="@{/want}" type="button"
+                       class="layui-btn layui-btn-radius m-detail-chat-font">我想要<i
+                            class="angle right icon"></i></a>
+                    <div th:unless="${session.user == null}" id="want" type="button"
+                         class="layui-btn layui-btn-radius m-detail-chat-font">我想要<i
+                            class="angle right icon"></i></div>
+                    <input type="hidden" id="buyId" th:value="${commodity.id}"/>
+                </div>
+                <div th:if="${collect==1}" class="m-detail-want" data-tooltip="取消收藏">
+                    <a th:href="@{/cancelCollect/{id}(id=${commodity.id})}">
+                        <i type="button" class="big star teal icon"></i>
+                    </a>
+                </div>
+                <div th:if="${collect==0}" class="m-detail-want" data-tooltip="收藏商品">
+                    <a th:href="@{/addCollect/{id}(id=${commodity.id})}">
+                        <i type="button" class="big star outline teal icon"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="m-detail-buy" style="margin-top: 20px;" th:if="${commodity.status == 2}">
+                <span class="m-detail-buy-font">商品已出售</span>
+            </div>
+            <div class="m-detail-buy" style="margin-top: 20px;" th:if="${commodity.status == 0}">
+                <span class="m-detail-buy-font">商品正在审核中</span>
+            </div>
+            <div class="m-detail-buy" style="margin-top: 20px;" th:if="${commodity.status == 3}">
+                <span class="m-detail-buy-font">商品审核失败</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- 底部 -->
+<footer th:replace="fragments :: footbar"></footer>
+
+<!--右下角浮动的图标-->
+<div id="toolbar" class="m-padded-tb-large m-fixed m-right-bottom" style="display: none">
+    <div id="toTop-button" class="ui teal icon button"><i class="chevron up icon"></i></div>
+</div>
+
+</body>
+
+<!--导入的script-->
+<th:block th:replace="fragments :: script">
+</th:block>
+<script th:src="@{/js/zoomify.min.js}"></script>
+<script>
+    window.jQuery || document.write('<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"><\/script>')
+</script>
+<!--商品图片-->
+<script type="text/javascript">
+    $('.example img').zoomify();
+</script>
+<script th:inline="javascript">
+    function show(imgId, imgUrl) {
+        var id = document.getElementById(imgId);  //参数1为小图片的id,参数2为大图片的src
+        var pic = document.getElementById('pic');    // pic为大图片div的id
+        id.onmouseover = function () {
+            pic.src = imgUrl;                        // 把参数2设为新的src(路径)
+        }
+    }
+
+    //获取images
+    var imgId = [];
+    var imgUrl = [];
+    var imageId = document.getElementsByName("imageId");
+    var imageUrl = document.getElementsByName("imageUrl");
+    for (var i = 0; i < imageId.length; i++) {
+        imgId[i] = imageId[i].value;
+    }
+    for (var i = 0; i < imageUrl.length; i++) {
+        imgUrl[i] = imageUrl[i].value;
+    }
+    for (var i = 0; i < imgId.length; i++) {
+        show(imgId[i], imgUrl[i]);  //调用show()，用所有大小图片参数
+    }
+</script>
+<!--我想要-->
+<script>
+    var buyId = $("#buyId").val();
+    layui.use('layer', function () {
+        var layer = layui.layer;
+        $("#want").click(function () {
+            layer.open({
+                type: 2,
+                title: '购买商品',
+                offset: ['60px', '1030px'],
+                area: ['465px', '600px'],
+                content: 'http://localhost:8080/toBuy/' + buyId
+            });
+        });
+    });
+</script>
+
+</html>

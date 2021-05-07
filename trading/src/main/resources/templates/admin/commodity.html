@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="admin/fragments :: head(~{::title})">
+    <title>商品管理</title>
+</head>
+
+<body>
+
+<!--头部导航-->
+<div th:replace="admin/fragments :: menu(1)"></div>
+
+<!--中间内容-->
+<div class="m-container-small m-padded-tb-big">
+    <div class="ui container">
+        <div class="ui secondary segment form">
+            <form class="inline fields" th:action="@{/admin/search}" method="post">
+                <div class="field">
+                    <input type="text" name="cName" placeholder="商品名称">
+                </div>
+                <div class="field">
+                    <!--dropdown是下拉框效果-->
+                    <div class="ui labeled action input">
+                        <div class="ui type selection dropdown">
+                            <input type="hidden" name="categoryId">
+                            <i class="dropdown icon"></i>
+                            <div class="default text">分类</div>
+                            <!--menu是菜单-->
+                            <div class="menu">
+                                <div th:each="category : ${categoryList}" th:data-value="${category.id}"
+                                     th:text="${category.caName}" class="item">数码产品
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <!--dropdown是下拉框效果-->
+                    <div class="ui labeled action input">
+                        <div class="ui type selection dropdown">
+                            <input type="hidden" name="status">
+                            <i class="dropdown icon"></i>
+                            <div class="default text">状态</div>
+                            <!--menu是菜单-->
+                            <div class="menu">
+                                <div class="item" data-value="0">待审核
+                                </div>
+                                <div class="item" data-value="1">审核通过
+                                </div>
+                                <div class="item" data-value="3">审核未通过
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <button type="submit" class="ui mini teal basic button"><i
+                            class="search icon"></i>搜索
+                    </button>
+                </div>
+            </form>
+            <div id="table-container">
+                <table class="ui compact teal table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>商品名称</th>
+                        <th>类型</th>
+                        <th>发布者</th>
+                        <th>发布时间</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="commodity, iterStat : ${commodityList}">
+                        <td th:text="${iterStat.count}">1</td>
+                        <td>
+                            <a th:text="${commodity.CName}" th:href="@{/commodityDetail/{id}(id=${commodity.id})}"></a>
+                        </td>
+                        <td th:text="${commodity.category.caName}">校园代步</td>
+                        <td th:text="${commodity.user.name}">啦啦啦</td>
+                        <td th:text="${#dates.format(commodity.updateTime,'yyyy-MM-dd')}">2020-12-10</td>
+                        <td th:if="${commodity.status==0}">待审核</td>
+                        <td th:if="${commodity.status==1}">审核通过</td>
+                        <td th:if="${commodity.status==3}">审核未通过</td>
+                        <td>
+                            <a th:href="@{/admin/toStatus1/{id}(id=${commodity.id})}"
+                               class="ui mini green basic button">审核通过</a>
+                            <a th:href="@{/admin/toStatus3/{id}(id=${commodity.id})}" class="ui mini blue basic button">审核未通过</a>
+                            <a th:href="@{/admin/deleteCommodity/{id}(id=${commodity.id})}"
+                               class="ui mini red basic button delete">删除商品</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th colspan="7">
+                            <div class="ui mini pagination menu">
+                                <div class="item"><a
+                                        th:href="@{/admin/toCommodity(pageNum=${pageInfo.hasPreviousPage}?${pageInfo.prePage}:1)}">上一页</a>
+                                </div>
+                                <div class="item"><a
+                                        th:href="@{/admin/toCommodity(pageNum=${pageInfo.hasNextPage}?${pageInfo.nextPage}:${pageInfo.pages})}">下一页</a>
+                                </div>
+                            </div>
+                        </th>
+                    </tr>
+                    </tfoot>
+                </table>
+                <div class="ui segment m-inline-block">
+                    <p>当前第<span th:text="${pageInfo.pageNum}">1</span>页，总<span
+                            th:text="${pageInfo.pages}">20</span>页，共<span th:text="${pageInfo.total}">321</span>条记录</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="admin/fragments :: footbar"></footer>
+
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".delete").click(function () {
+            if (confirm("确定删除吗")) {
+                return true;
+            }
+            return false;
+        });
+    });
+</script>
+
+<script>
+    $('.menu.toggle').click(function () {
+        $('.m-item').toggleClass('m-mobile-hide');
+    });
+    $('.ui.dropdown').dropdown({
+        on: 'hover'
+    });
+</script>
+
+</html>
